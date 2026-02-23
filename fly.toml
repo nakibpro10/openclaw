@@ -1,33 +1,33 @@
 # OpenClaw Fly.io deployment configuration
-# See https://fly.io/docs/reference/configuration/
 
-app = "openclaw"
-primary_region = "iad" # change to your closest region
+app = "openclaw" # আপনার অ্যাপের ইউনিক নাম দিন
+primary_region = "ams" # আপনার জন্য ams বা sin ভালো হবে
 
 [build]
 dockerfile = "Dockerfile"
 
 [env]
 NODE_ENV = "production"
-# Fly uses x86, but keep this for consistency
 OPENCLAW_PREFER_PNPM = "1"
 OPENCLAW_STATE_DIR = "/data"
-NODE_OPTIONS = "--max-old-space-size=1536"
+# মেমোরি ২৫৬ বা ৫১২ এর জন্য নিচের অপশনটি সেট করা ভালো
+NODE_OPTIONS = "--max-old-space-size=256" 
 
 [processes]
-app = "node dist/index.js gateway --allow-unconfigured --port 3000 --bind lan"
+# এখানে পোর্ট ৮০৮০ করে দেওয়া হয়েছে যাতে http_service এর সাথে মিলে যায়
+app = "node dist/index.js gateway --allow-unconfigured --port 8080 --bind 0.0.0.0"
 
 [http_service]
-internal_port = 8080
+internal_port = 8080 
 force_https = true
-auto_stop_machines = false # Keep running for persistent connections
+auto_stop_machines = true # ফ্রিতে চালানোর জন্য এটি true রাখা ভালো
 auto_start_machines = true
-min_machines_running = 1
+min_machines_running = 0
 processes = ["app"]
 
 [[vm]]
-size = "shared-cpu-2x"
-memory = "2048mb"
+size = "shared-cpu-1x" # ফ্রি টায়ারের জন্য ১এক্স
+memory = "256mb"        # ২৫৬ বা ৫১২ এমবি দিন
 
 [mounts]
 source = "openclaw_data"
