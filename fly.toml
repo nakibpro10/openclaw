@@ -9,7 +9,6 @@ dockerfile = "Dockerfile"
 [env]
 NODE_ENV = "production"
 OPENCLAW_PREFER_PNPM = "1"
-OPENCLAW_STATE_DIR = "/data"
 # মেমোরি ২৫৬ বা ৫১২ এর জন্য নিচের অপশনটি সেট করা ভালো
 NODE_OPTIONS = "--max-old-space-size=256" 
 
@@ -29,6 +28,3 @@ processes = ["app"]
 size = "shared-cpu-1x" # ফ্রি টায়ারের জন্য ১এক্স
 memory = "256mb"        # ২৫৬ বা ৫১২ এমবি দিন
 
-[mounts]
-source = "openclaw_data"
-destination = "/data"
