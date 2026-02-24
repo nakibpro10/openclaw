@@ -1,30 +1,27 @@
-# OpenClaw Fly.io deployment configuration
-
-app = "openclaw" # আপনার অ্যাপের ইউনিক নাম দিন
-primary_region = "ams" # আপনার জন্য ams বা sin ভালো হবে
+app = "openclaw-lauhhw"
+primary_region = "ams"
 
 [build]
-dockerfile = "Dockerfile"
+  dockerfile = "Dockerfile"
 
 [env]
-NODE_ENV = "production"
-OPENCLAW_PREFER_PNPM = "1"
-# মেমোরি ২৫৬ বা ৫১২ এর জন্য নিচের অপশনটি সেট করা ভালো
-NODE_OPTIONS = "--max-old-space-size=256" 
+  NODE_ENV = "production"
+  OPENCLAW_PREFER_PNPM = "1"
+  # মেমোরি লিমিট একটু বাড়িয়ে দিচ্ছি যাতে ক্রাশ না করে
+  NODE_OPTIONS = "--max-old-space-size=450"
 
 [processes]
-# এখানে পোর্ট ৮০৮০ করে দেওয়া হয়েছে যাতে http_service এর সাথে মিলে যায়
-app = "node dist/index.js gateway --allow-unconfigured --port 8080 --bind 0.0.0.0"
+  # পোর্ট এখানে ৩০০০ ই রাখছি কারণ আপনার ডকার ইমেজ হয়তো এটাই ডিফল্ট ধরেছে
+  app = "node dist/index.js gateway --allow-unconfigured --port 3000 --bind 0.0.0.0"
 
 [http_service]
-internal_port = 8080 
-force_https = true
-auto_stop_machines = true # ফ্রিতে চালানোর জন্য এটি true রাখা ভালো
-auto_start_machines = true
-min_machines_running = 0
-processes = ["app"]
+  internal_port = 3000 
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
 
 [[vm]]
-size = "shared-cpu-1x" # ফ্রি টায়ারের জন্য ১এক্স
-memory = "256mb"        # ২৫৬ বা ৫১২ এমবি দিন
-
+  size = "shared-cpu-1x"
+  memory = "512mb" # ২৫৬ থেকে বাড়িয়ে ৫১২ করে দিলাম
